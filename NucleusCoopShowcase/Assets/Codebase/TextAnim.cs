@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace NucleusShowcase {
     [ExecuteInEditMode]
     public class TextAnim : MonoBehaviour {
-
+        public bool bAnimateInEditor;
         public float fAnimationTime = 5;
         public string strText;
-        public bool bAnimateInEditor;
 
         private TextMeshProUGUI objTextMesh;
         private float fTimer;
         private float fTimePerChar;
         private int nCurrentChar;
         private int nCharsPerFrame;
-
-        void Start() {
-            ReLoad();
-        }
 
         public void ReLoad() {
             objTextMesh = GetComponent<TextMeshProUGUI>();
@@ -31,7 +27,18 @@ namespace NucleusShowcase {
             nCharsPerFrame = Mathf.Max(1, (int)((1 / 60.0f) / fTimePerChar));
         }
 
-        void Update() {
+        public void ChangeText(string strNewText) {
+            this.enabled = true;
+
+            strText = strNewText;
+            ReLoad();
+        }
+
+        private void Start() {
+            ReLoad();
+        }
+
+        private void Update() {
 #if UNITY_EDITOR
             if (!UnityEditor.EditorApplication.isPlaying &&
                 !bAnimateInEditor) {
