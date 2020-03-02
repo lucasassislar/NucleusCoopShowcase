@@ -20,10 +20,15 @@ namespace NucleusShowcase {
         public void ReLoad() {
             objTextMesh = GetComponent<TextMeshProUGUI>();
 
-            objTextMesh.text = "";
-            fTimePerChar = fAnimationTime / strText.Length;
             nCurrentChar = 0;
             fTimer = 0;
+
+            if (string.IsNullOrEmpty(strText)) {
+                strText = objTextMesh.text;
+            }
+            objTextMesh.text = "";
+
+            fTimePerChar = fAnimationTime / strText.Length;
             nCharsPerFrame = Mathf.Max(1, (int)((1 / 60.0f) / fTimePerChar));
         }
 
@@ -46,7 +51,8 @@ namespace NucleusShowcase {
                 return;
             }
 #endif
-            if (!objTextMesh.enabled) {
+            if (!objTextMesh.enabled ||
+                string.IsNullOrEmpty(strText)) {
                 return;
             }
 
@@ -59,7 +65,10 @@ namespace NucleusShowcase {
                     char charLoaded = strText[nCurrentChar];
                     objTextMesh.text += charLoaded;
                     if (charLoaded == ' ') {
-                        objTextMesh.text += strText[++nCurrentChar];
+                        nCurrentChar++;
+                        if (nCurrentChar < strText.Length) {
+                            objTextMesh.text += strText[nCurrentChar];
+                        }
                     }
                     nCurrentChar++;
 
